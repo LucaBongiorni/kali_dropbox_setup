@@ -229,12 +229,24 @@ p
 w
 EOF
 
-cat << EOF > /etc/init.d/expand_kali_rpi_sdcard_step2.sh
+cat << EOF > /etc/init.d/expand_kali_rpi_fs_step2.sh
 #!/bin/bash
+sleep 20
 resize2fs /dev/mmcblk0p2
+sleep 5
 rm $0
+sleep 5
+reboot
 EOF
+
+chmod +x /etc/init.d/expand_kali_rpi_fs_step2.sh
+update-rc.d expand_kali_rpi_fs_step2.sh 
+
+
+echo "The system will now reboot TWICE.  Please do "
+
 }
+
 
 ###############################
 #All functions
@@ -245,11 +257,8 @@ function allFunctions
     runUpdates
     instTools
     confOVPN
+    expandFS
 }
-
-
-
-
 
 
 ###############################
@@ -264,7 +273,8 @@ until [ "$menuSelection" = "0" ]; do
     echo "3. Install additional tools"
     echo "4. Configure bash prompt"
     echo "5. Configure OpenVPN server connection"
-    echo "6. RUN ALL FUNCTIONS"
+    echo "6. Expand the file system"
+    echo "7. RUN ALL FUNCTIONS"
     echo "X. Exit"
     echo ""
     read menuSelection
@@ -275,7 +285,8 @@ until [ "$menuSelection" = "0" ]; do
         3 ) instTools;;
         4 ) confTerminal;;
         5 ) confOVPN;;
-        6 ) allFunctions;;
+        6 ) expandFS;;
+        7 ) allFunctions;;
         X ) echo -e "\n\nExiting...  You should reboot just for good measure!\n\n" && exit;;
         x ) echo -e "\n\nExiting...  You should reboot just for good measure!\n\n" && exit;;
         * ) echo "Invalid selection"
