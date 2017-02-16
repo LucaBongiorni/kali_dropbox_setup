@@ -241,10 +241,9 @@ EOF
 
 chmod +x /etc/init.d/expand_kali_rpi_fs_step2.sh
 update-rc.d expand_kali_rpi_fs_step2.sh 
-
-
-echo "The system will now reboot TWICE.  Please do "
-
+echo "The system will now reboot TWICE.  After the first reboot, it will pause at the login promt, then reboot again."
+sleep 5
+reboot
 }
 
 
