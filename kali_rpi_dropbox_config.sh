@@ -211,40 +211,43 @@ update-rc.d ssh enable
 echo -e "\n\nOpenVPN configuration routine complete.  Please address any errors and make sure the necessary files are in the correct place.  Don't forget to test functionality before deploying!\n\n"
 }
 
-###############################
-#expand filesystem
-function expandFS
-{
-fdisk /dev/mmcblk0 <<EOF
-p
-d
-2
-n
-p
-2
-125001
+# ###############################
+# #expand filesystem
+# function expandFS1
+# {
+# fdisk /dev/mmcblk0 <<EOF
+# p
+# d
+# 2
+# n
+# p
+# 2
+# 125001
  
  
-p
-w
-EOF
+# p
+# w
+# EOF
 
-cat << EOF > /etc/init.d/expand_kali_rpi_fs_step2.sh
-#!/bin/bash
-sleep 20
-resize2fs /dev/mmcblk0p2
-sleep 5
-rm $0
-sleep 5
-reboot
-EOF
 
-chmod +x /etc/init.d/expand_kali_rpi_fs_step2.sh
-update-rc.d expand_kali_rpi_fs_step2.sh 
-echo "The system will now reboot TWICE.  After the first reboot, it will pause at the login promt, then reboot again."
-sleep 5
-reboot
-}
+# cp /etc/rc.local /root/rc.local.bak
+
+# cat << EOF > /etc/rc.local
+# #!/bin/bash
+# sleep 1
+# resize2fs /dev/mmcblk0p2
+# sleep 5
+# cat /root/rc.local.bak >> /etc/rc.local
+# sleep 5
+# exit
+# EOF
+
+# echo "The system will now reboot TWICE.  After the first reboot, it will pause at the login promt, then reboot again."
+# reboot
+# }
+
+
+
 
 
 ###############################
@@ -256,7 +259,6 @@ function allFunctions
     runUpdates
     instTools
     confOVPN
-    expandFS
 }
 
 
@@ -272,8 +274,7 @@ until [ "$menuSelection" = "0" ]; do
     echo "3. Install additional tools"
     echo "4. Configure bash prompt"
     echo "5. Configure OpenVPN server connection"
-    echo "6. Expand the file system"
-    echo "7. RUN ALL FUNCTIONS"
+    echo "6. RUN ALL FUNCTIONS"
     echo "X. Exit"
     echo ""
     read menuSelection
@@ -284,8 +285,7 @@ until [ "$menuSelection" = "0" ]; do
         3 ) instTools;;
         4 ) confTerminal;;
         5 ) confOVPN;;
-        6 ) expandFS;;
-        7 ) allFunctions;;
+        6 ) allFunctions;;
         X ) echo -e "\n\nExiting...  You should reboot just for good measure!\n\n" && exit;;
         x ) echo -e "\n\nExiting...  You should reboot just for good measure!\n\n" && exit;;
         * ) echo "Invalid selection"
